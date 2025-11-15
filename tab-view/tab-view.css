@@ -274,6 +274,27 @@ body {
   margin-top: 2px;
 }
 
+/* Unread Badge */
+.unread-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 8px;
+  transition: background-color 0.3s ease;
+}
+
+body.dark-mode .unread-badge {
+  background: var(--accent-primary);
+}
+
 .empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -318,6 +339,40 @@ body {
 .folder-name {
   font-size: 13px;
   color: var(--text-tertiary);
+}
+
+.email-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-button:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+}
+
+#sortIcon {
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+#sortLabel {
+  font-weight: 500;
 }
 
 .email-stats {

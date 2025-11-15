@@ -6,6 +6,8 @@ let collapseState = {};
 let currentAccount = null;
 let currentFolder = null;
 let isDarkMode = false;
+let sortOrder = 'desc'; // 'asc' or 'desc' for date sorting
+let accountUnreadCounts = {}; // Store unread counts per account
 
 // Initialize tab view
 async function init() {
@@ -19,6 +21,7 @@ async function init() {
     await loadAccounts();
     await loadGroups();
     await loadCollapseState();
+    await loadUnreadCounts();
     
     // Render UI
     renderAccountsPanel();
@@ -28,6 +31,9 @@ async function init() {
     
     // Listen for storage changes (from options page)
     messenger.storage.onChanged.addListener(handleStorageChange);
+    
+    // Listen for new messages to auto-refresh
+    messenger.messages.onNewMailReceived.addListener(handleNewMail);
     
     console.log('Account Groups tab initialized successfully');
   } catch (error) {
@@ -90,6 +96,59 @@ async function loadGroups() {
 // Load collapse state from storage
 async function loadCollapseState() {
   collapseState = await getCollapseState();
+}
+
+// Load unread counts for all accounts
+async function loadUnreadCounts() {
+  try {
+    accountUnreadCounts = {};
+    for (const account of allAccounts) {
+      accountUnreadCounts[account.id] = await getAccountUnreadCount(account);
+    }
+  } catch (error) {
+    console.error('Error loading unread counts:', error);
+  }
+}
+
+// Get unread count for a specific account
+async function getAccountUnreadCount(account) {
+  try {
+    const folders = await messenger.folders.getSubFolders(account.rootFolder.id);
+    let totalUnread = 0;
+    
+    // Count unread in all folders (recursively would be better, but this covers main folders)
+    for (const folder of folders) {
+      if (folder.type === 'inbox' || folder.type === 'drafts' || folder.type === 'sent') {
+        // Only count inbox-like folders for unread
+        if (folder.type === 'inbox') {
+          const messages = await messenger.messages.list(folder.id);
+          const unreadMessages = messages.messages.filter(msg => !msg.read);
+          totalUnread += unreadMessages.length;
+        }
+      }
+    }
+    
+    return totalUnread;
+  } catch (error) {
+    console.error('Error getting unread count for account:', account.name, error);
+    return 0;
+  }
+}
+
+// Handle new mail received
+async function handleNewMail(folder, messages) {
+  console.log('New mail received in folder:', folder.name, 'Messages:', messages.messages.length);
+  
+  // Reload unread counts
+  await loadUnreadCounts();
+  
+  // Re-render accounts panel to show updated badges
+  renderAccountsPanel();
+  
+  // If viewing the folder that received mail, refresh the email list
+  if (currentFolder && currentFolder.id === folder.id) {
+    await loadEmails(currentFolder);
+  }
 }
 
 // Handle storage changes
@@ -243,6 +302,16 @@ function createAccountElement(account) {
   accountDiv.appendChild(iconSpan);
   accountDiv.appendChild(infoDiv);
   
+  // Add unread badge if there are unread messages
+  const unreadCount = accountUnreadCounts[account.id] || 0;
+  if (unreadCount > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'unread-badge';
+    badge.textContent = unreadCount;
+    badge.title = unreadCount + ' unread message' + (unreadCount > 1 ? 's' : '');
+    accountDiv.appendChild(badge);
+  }
+  
   // Add click handler
   accountDiv.addEventListener('click', () => handleAccountClick(account));
   
@@ -330,7 +399,10 @@ async function loadEmails(folder) {
   try {
     // Get messages from the folder (use folder.id for newer Thunderbird versions)
     const messagePage = await messenger.messages.list(folder.id);
-    const messages = messagePage.messages || [];
+    let messages = messagePage.messages || [];
+    
+    // Sort messages by date
+    messages = sortMessages(messages);
     
     // Update count
     document.getElementById('emailCount').textContent = messages.length;
@@ -361,6 +433,42 @@ async function loadEmails(folder) {
   } catch (error) {
     console.error('Error loading emails:', error);
     showError('Error loading emails: ' + error.message);
+  }
+}
+
+// Sort messages by date
+function sortMessages(messages) {
+  return messages.sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    
+    if (sortOrder === 'desc') {
+      return dateB - dateA; // Newest first
+    } else {
+      return dateA - dateB; // Oldest first
+    }
+  });
+}
+
+// Toggle sort order
+function toggleSort() {
+  sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
+  
+  // Update UI
+  const icon = document.getElementById('sortIcon');
+  const label = document.getElementById('sortLabel');
+  
+  if (sortOrder === 'desc') {
+    icon.textContent = '🔽';
+    label.textContent = 'Newest First';
+  } else {
+    icon.textContent = '🔼';
+    label.textContent = 'Oldest First';
+  }
+  
+  // Reload current folder if one is selected
+  if (currentFolder) {
+    loadEmails(currentFolder);
   }
 }
 
@@ -436,11 +544,14 @@ function showError(message) {
 function setupEventListeners() {
   // Toggle theme button
   document.getElementById('toggleTheme').addEventListener('click', toggleTheme);
-  
+
   // Open options button
   document.getElementById('openOptions').addEventListener('click', () => {
     messenger.runtime.openOptionsPage();
   });
+  
+  // Sort button
+  document.getElementById('sortButton').addEventListener('click', toggleSort);
 }
 
 // Utility: Escape HTML
