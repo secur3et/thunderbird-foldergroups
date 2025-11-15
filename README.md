@@ -61,7 +61,8 @@ A modern Thunderbird extension that helps you organize email accounts into custo
 
 ## 📸 Screenshots
 
-> Add screenshots here showing light mode, dark mode, and the main interface
+![Light Mode](screenshots/light-mode.png)
+![Dark Mode](screenshots/dark-mode.png)
 
 ## 📦 Detailed Installation
 
