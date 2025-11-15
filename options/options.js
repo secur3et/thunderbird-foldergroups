@@ -74,17 +74,44 @@ function createAccountElement(account, isGrouped = false, showRemoveBtn = false)
   else if (account.type === 'pop3') icon = '📬';
   else if (account.type === 'nntp') icon = '📰';
   
-  div.innerHTML = `
-    <div class="account-header">
-      <span class="account-icon">${icon}</span>
-      <div class="account-info">
-        <div class="account-name">${escapeHtml(account.name)}</div>
-        <div class="account-email">${account.identities && account.identities[0] ? escapeHtml(account.identities[0].email) : ''}</div>
-      </div>
-      <span class="drag-handle">⋮⋮</span>
-    </div>
-    ${showRemoveBtn ? '<button class="remove-from-group" title="Remove from group">×</button>' : ''}
-  `;
+  const headerDiv = document.createElement('div');
+  headerDiv.className = 'account-header';
+  
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'account-icon';
+  iconSpan.textContent = icon;
+  
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'account-info';
+  
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'account-name';
+  nameDiv.textContent = account.name;
+  
+  const emailDiv = document.createElement('div');
+  emailDiv.className = 'account-email';
+  emailDiv.textContent = account.identities && account.identities[0] ? account.identities[0].email : '';
+  
+  const dragHandle = document.createElement('span');
+  dragHandle.className = 'drag-handle';
+  dragHandle.textContent = '⋮⋮';
+  
+  infoDiv.appendChild(nameDiv);
+  infoDiv.appendChild(emailDiv);
+  
+  headerDiv.appendChild(iconSpan);
+  headerDiv.appendChild(infoDiv);
+  headerDiv.appendChild(dragHandle);
+  
+  div.appendChild(headerDiv);
+  
+  if (showRemoveBtn) {
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-from-group';
+    removeBtn.title = 'Remove from group';
+    removeBtn.textContent = '×';
+    div.appendChild(removeBtn);
+  }
   
   // Drag event handlers
   div.addEventListener('dragstart', handleDragStart);
@@ -129,23 +156,56 @@ function createGroupElement(group) {
   // Get accounts in this group
   const groupAccounts = allAccounts.filter(acc => group.accountIds.includes(acc.id));
   
-  div.innerHTML = `
-    <div class="group-header">
-      <span class="group-icon">📁</span>
-      <span class="group-name-display">${escapeHtml(group.name)}</span>
-      <span class="group-account-count">${groupAccounts.length}</span>
-      <div class="group-actions">
-        <button class="icon-btn rename" title="Rename group">✏️</button>
-        <button class="icon-btn delete" title="Delete group">🗑️</button>
-      </div>
-    </div>
-    <div class="group-drop-zone ${groupAccounts.length === 0 ? 'empty' : ''}" data-group-id="${group.id}">
-      ${groupAccounts.length === 0 ? '<span>Drop accounts here</span>' : ''}
-    </div>
-  `;
+  const headerDiv = document.createElement('div');
+  headerDiv.className = 'group-header';
+  
+  const groupIcon = document.createElement('span');
+  groupIcon.className = 'group-icon';
+  groupIcon.textContent = '📁';
+  
+  const groupNameDisplay = document.createElement('span');
+  groupNameDisplay.className = 'group-name-display';
+  groupNameDisplay.textContent = group.name;
+  
+  const accountCountSpan = document.createElement('span');
+  accountCountSpan.className = 'group-account-count';
+  accountCountSpan.textContent = groupAccounts.length;
+  
+  const actionsDiv = document.createElement('div');
+  actionsDiv.className = 'group-actions';
+  
+  const renameBtn = document.createElement('button');
+  renameBtn.className = 'icon-btn rename';
+  renameBtn.title = 'Rename group';
+  renameBtn.textContent = '✏️';
+  
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'icon-btn delete';
+  deleteBtn.title = 'Delete group';
+  deleteBtn.textContent = '🗑️';
+  
+  actionsDiv.appendChild(renameBtn);
+  actionsDiv.appendChild(deleteBtn);
+  
+  headerDiv.appendChild(groupIcon);
+  headerDiv.appendChild(groupNameDisplay);
+  headerDiv.appendChild(accountCountSpan);
+  headerDiv.appendChild(actionsDiv);
+  
+  const dropZone = document.createElement('div');
+  dropZone.className = 'group-drop-zone' + (groupAccounts.length === 0 ? ' empty' : '');
+  dropZone.dataset.groupId = group.id;
+  
+  if (groupAccounts.length === 0) {
+    const dropText = document.createElement('span');
+    dropText.textContent = 'Drop accounts here';
+    dropZone.appendChild(dropText);
+  }
+  
+  div.appendChild(headerDiv);
+  div.appendChild(dropZone);
   
   // Render accounts in group
-  const dropZone = div.querySelector('.group-drop-zone');
   groupAccounts.forEach(account => {
     const accountElement = createAccountElement(account, true, true);
     accountElement.draggable = false; // Don't allow dragging from groups

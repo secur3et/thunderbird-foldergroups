@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "author": "secur3-et",
   "homepage_url": "https://github.com/secur3-et/thunderbird-foldergroups",
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "account-folder-manager@thunderbird.extension",
       "strict_min_version": "91.0"
@@ -13,7 +13,6 @@
   },
   "permissions": [
     "accountsRead",
-    "accountsFolders",
     "messagesRead",
     "storage"
   ],

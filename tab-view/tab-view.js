@@ -144,12 +144,27 @@ function createGroupElement(group) {
   // Group header
   const headerDiv = document.createElement('div');
   headerDiv.className = 'group-header';
-  headerDiv.innerHTML = `
-    <span class="collapse-icon ${isCollapsed ? 'collapsed' : ''}">▼</span>
-    <span class="group-icon">📁</span>
-    <span class="group-name">${escapeHtml(group.name)}</span>
-    <span class="account-count">${groupAccounts.length}</span>
-  `;
+  
+  const collapseIcon = document.createElement('span');
+  collapseIcon.className = 'collapse-icon' + (isCollapsed ? ' collapsed' : '');
+  collapseIcon.textContent = '▼';
+  
+  const groupIcon = document.createElement('span');
+  groupIcon.className = 'group-icon';
+  groupIcon.textContent = '📁';
+  
+  const groupName = document.createElement('span');
+  groupName.className = 'group-name';
+  groupName.textContent = group.name;
+  
+  const accountCount = document.createElement('span');
+  accountCount.className = 'account-count';
+  accountCount.textContent = groupAccounts.length;
+  
+  headerDiv.appendChild(collapseIcon);
+  headerDiv.appendChild(groupIcon);
+  headerDiv.appendChild(groupName);
+  headerDiv.appendChild(accountCount);
   
   // Group accounts container
   const accountsDiv = document.createElement('div');
@@ -206,14 +221,27 @@ function createAccountElement(account) {
   else if (account.type === 'pop3') icon = '📬';
   else if (account.type === 'nntp') icon = '📰';
   
-  accountDiv.innerHTML = `
-    <span class="account-icon">${icon}</span>
-    <div class="account-info">
-      <div class="account-name">${escapeHtml(account.name)}</div>
-      ${account.identities && account.identities[0] ? 
-        `<div class="account-email">${escapeHtml(account.identities[0].email)}</div>` : ''}
-    </div>
-  `;
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'account-icon';
+  iconSpan.textContent = icon;
+  
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'account-info';
+  
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'account-name';
+  nameDiv.textContent = account.name;
+  infoDiv.appendChild(nameDiv);
+  
+  if (account.identities && account.identities[0]) {
+    const emailDiv = document.createElement('div');
+    emailDiv.className = 'account-email';
+    emailDiv.textContent = account.identities[0].email;
+    infoDiv.appendChild(emailDiv);
+  }
+  
+  accountDiv.appendChild(iconSpan);
+  accountDiv.appendChild(infoDiv);
   
   // Add click handler
   accountDiv.addEventListener('click', () => handleAccountClick(account));
@@ -293,7 +321,11 @@ async function loadEmails(folder) {
   const container = document.getElementById('emailListContainer');
   
   // Show loading
-  container.innerHTML = '<div class="loading-message">⏳ Loading emails...</div>';
+  container.textContent = '';
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'loading-message';
+  loadingDiv.textContent = '⏳ Loading emails...';
+  container.appendChild(loadingDiv);
   
   try {
     // Get messages from the folder (use folder.id for newer Thunderbird versions)
@@ -304,7 +336,13 @@ async function loadEmails(folder) {
     document.getElementById('emailCount').textContent = messages.length;
     
     if (messages.length === 0) {
-      container.innerHTML = '<div class="welcome-message"><p>No messages in this folder</p></div>';
+      container.textContent = '';
+      const welcomeDiv = document.createElement('div');
+      welcomeDiv.className = 'welcome-message';
+      const p = document.createElement('p');
+      p.textContent = 'No messages in this folder';
+      welcomeDiv.appendChild(p);
+      container.appendChild(welcomeDiv);
       return;
     }
     
@@ -342,13 +380,26 @@ function createEmailItem(message) {
   // Get subject
   const subject = message.subject || '(No subject)';
   
-  div.innerHTML = `
-    <div class="email-header-row">
-      <span class="email-from">${escapeHtml(from)}</span>
-      <span class="email-date">${dateStr}</span>
-    </div>
-    <div class="email-subject">${escapeHtml(subject)}</div>
-  `;
+  const headerRow = document.createElement('div');
+  headerRow.className = 'email-header-row';
+  
+  const fromSpan = document.createElement('span');
+  fromSpan.className = 'email-from';
+  fromSpan.textContent = from;
+  
+  const dateSpan = document.createElement('span');
+  dateSpan.className = 'email-date';
+  dateSpan.textContent = dateStr;
+  
+  headerRow.appendChild(fromSpan);
+  headerRow.appendChild(dateSpan);
+  
+  const subjectDiv = document.createElement('div');
+  subjectDiv.className = 'email-subject';
+  subjectDiv.textContent = subject;
+  
+  div.appendChild(headerRow);
+  div.appendChild(subjectDiv);
   
   // Add click handler to open message
   div.addEventListener('click', () => handleEmailClick(message));
@@ -374,7 +425,11 @@ async function handleEmailClick(message) {
 // Show error message
 function showError(message) {
   const container = document.getElementById('emailListContainer');
-  container.innerHTML = `<div class="error-message">❌ ${escapeHtml(message)}</div>`;
+  container.textContent = '';
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-message';
+  errorDiv.textContent = '❌ ' + message;
+  container.appendChild(errorDiv);
 }
 
 // Setup event listeners

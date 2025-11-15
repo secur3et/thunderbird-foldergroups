@@ -12,7 +12,11 @@ async function init() {
     // Check if messenger API is available
     if (typeof messenger === 'undefined') {
       console.error('messenger API not available!');
-      document.body.innerHTML = '<div style="padding: 20px;">Error: Thunderbird API not available. Please reload the extension.</div>';
+      const errorDiv = document.createElement('div');
+      errorDiv.style.padding = '20px';
+      errorDiv.textContent = 'Error: Thunderbird API not available. Please reload the extension.';
+      document.body.textContent = '';
+      document.body.appendChild(errorDiv);
       return;
     }
     
@@ -33,7 +37,11 @@ async function init() {
     console.log('Account Groups popup initialized successfully');
   } catch (error) {
     console.error('Error initializing sidebar:', error);
-    document.body.innerHTML = '<div style="padding: 20px; color: red;">Error loading: ' + error.message + '</div>';
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = 'padding: 20px; color: red;';
+    errorDiv.textContent = 'Error loading: ' + error.message;
+    document.body.textContent = '';
+    document.body.appendChild(errorDiv);
   }
 }
 
@@ -110,12 +118,27 @@ function createGroupElement(group) {
   // Group header
   const headerDiv = document.createElement('div');
   headerDiv.className = 'group-header';
-  headerDiv.innerHTML = `
-    <span class="collapse-icon ${isCollapsed ? 'collapsed' : ''}">▼</span>
-    <span class="group-icon">📁</span>
-    <span class="group-name">${escapeHtml(group.name)}</span>
-    <span class="account-count">${groupAccounts.length}</span>
-  `;
+  
+  const collapseIcon = document.createElement('span');
+  collapseIcon.className = 'collapse-icon' + (isCollapsed ? ' collapsed' : '');
+  collapseIcon.textContent = '▼';
+  
+  const groupIcon = document.createElement('span');
+  groupIcon.className = 'group-icon';
+  groupIcon.textContent = '📁';
+  
+  const groupName = document.createElement('span');
+  groupName.className = 'group-name';
+  groupName.textContent = group.name;
+  
+  const accountCount = document.createElement('span');
+  accountCount.className = 'account-count';
+  accountCount.textContent = groupAccounts.length;
+  
+  headerDiv.appendChild(collapseIcon);
+  headerDiv.appendChild(groupIcon);
+  headerDiv.appendChild(groupName);
+  headerDiv.appendChild(accountCount);
   
   // Group accounts container
   const accountsDiv = document.createElement('div');
@@ -172,14 +195,27 @@ function createAccountElement(account) {
   else if (account.type === 'pop3') icon = '📬';
   else if (account.type === 'nntp') icon = '📰';
   
-  accountDiv.innerHTML = `
-    <span class="account-icon">${icon}</span>
-    <div class="account-info">
-      <div class="account-name">${escapeHtml(account.name)}</div>
-      ${account.identities && account.identities[0] ? 
-        `<div class="account-email">${escapeHtml(account.identities[0].email)}</div>` : ''}
-    </div>
-  `;
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'account-icon';
+  iconSpan.textContent = icon;
+  
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'account-info';
+  
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'account-name';
+  nameDiv.textContent = account.name;
+  infoDiv.appendChild(nameDiv);
+  
+  if (account.identities && account.identities[0]) {
+    const emailDiv = document.createElement('div');
+    emailDiv.className = 'account-email';
+    emailDiv.textContent = account.identities[0].email;
+    infoDiv.appendChild(emailDiv);
+  }
+  
+  accountDiv.appendChild(iconSpan);
+  accountDiv.appendChild(infoDiv);
   
   // Add click handler (future: navigate to account)
   accountDiv.addEventListener('click', () => handleAccountClick(account));
