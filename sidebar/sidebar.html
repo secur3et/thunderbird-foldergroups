@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Groups</title>
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="sidebar-container">
+    <header class="sidebar-header">
+      <h1>Account Groups</h1>
+      <button id="openOptions" class="icon-button" title="Manage Groups">⚙️</button>
+    </header>
+    
+    <div class="sidebar-content">
+      <!-- Ungrouped accounts section -->
+      <div id="ungroupedSection" class="ungrouped-section">
+        <div class="section-header">
+          <span class="section-title">Ungrouped Accounts</span>
+        </div>
+        <div id="ungroupedAccounts" class="accounts-list"></div>
+      </div>
+      
+      <!-- Grouped accounts section -->
+      <div id="groupsContainer" class="groups-container"></div>
+      
+      <!-- Empty state -->
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <p>No accounts found.</p>
+        <p class="help-text">Add an email account in Thunderbird to get started.</p>
+      </div>
+    </div>
+  </div>
+  
+  <script src="../shared/storage.js"></script>
+  <script src="sidebar.js"></script>
+</body>
+</html>
+

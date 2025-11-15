@@ -1,0 +1,365 @@
+/* Options Page Styles - Casual, Modern Design */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.options-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 40px);
+}
+
+/* Header */
+.options-header {
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+}
+
+.options-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Content Area */
+.options-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 30px;
+  flex: 1;
+}
+
+/* Panels */
+.panel {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.panel-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.count-badge {
+  background-color: #667eea;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.panel-info {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+  padding: 10px;
+  background-color: #e8e8f0;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Items List */
+.items-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Account Item */
+.account-item {
+  background: white;
+  padding: 14px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: move;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.account-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+}
+
+.account-item.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-icon {
+  font-size: 20px;
+}
+
+.account-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.account-email {
+  font-size: 12px;
+  color: #888;
+}
+
+.drag-handle {
+  color: #ccc;
+  font-size: 16px;
+  cursor: grab;
+}
+
+/* Group Item */
+.group-item {
+  background: white;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+  transition: all 0.2s ease;
+}
+
+.group-item.drag-over {
+  border-color: #667eea;
+  background-color: #f0f3ff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.group-icon {
+  font-size: 18px;
+}
+
+.group-name-display {
+  flex: 1;
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+
+.group-account-count {
+  background-color: #e0e0e0;
+  color: #666;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.group-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.icon-btn:hover {
+  background-color: #e8e8e8;
+}
+
+.icon-btn.delete:hover {
+  background-color: #ffe0e0;
+}
+
+.group-drop-zone {
+  min-height: 60px;
+  padding: 12px;
+  background-color: #f9f9f9;
+}
+
+.group-drop-zone.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 12px;
+  border: 2px dashed #ddd;
+  border-radius: 6px;
+  margin: 8px;
+}
+
+.group-drop-zone .account-item {
+  cursor: default;
+  position: relative;
+}
+
+.group-drop-zone .account-item:hover {
+  border-color: transparent;
+  transform: none;
+}
+
+.remove-from-group {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.group-drop-zone .account-item:hover .remove-from-group {
+  display: flex;
+}
+
+.remove-from-group:hover {
+  background-color: rgba(255, 0, 0, 0.9);
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Empty States */
+.empty-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: #aaa;
+}
+
+.empty-message p {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.help-text {
+  font-size: 13px;
+  color: #bbb;
+}
+
+/* Footer */
+.options-footer {
+  padding: 20px 30px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-info {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+}
+
+/* Scrollbar */
+.items-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.items-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.items-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.items-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .options-content {
+    grid-template-columns: 1fr;
+  }
+}
+

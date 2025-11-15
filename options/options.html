@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Groups - Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <header class="options-header">
+      <h1>⚙️ Account Groups Manager</h1>
+      <p class="subtitle">Organize your email accounts into custom groups</p>
+    </header>
+    
+    <div class="options-content">
+      <!-- Left Panel: Available Accounts -->
+      <div class="panel accounts-panel">
+        <div class="panel-header">
+          <h2>📧 Available Accounts</h2>
+          <span id="accountsCount" class="count-badge">0</span>
+        </div>
+        <div class="panel-info">
+          Drag accounts to groups on the right to organize them
+        </div>
+        <div id="accountsList" class="items-list"></div>
+      </div>
+      
+      <!-- Right Panel: Groups -->
+      <div class="panel groups-panel">
+        <div class="panel-header">
+          <h2>📁 Account Groups</h2>
+          <div class="header-actions">
+            <button id="addGroupBtn" class="btn btn-primary">+ Add Group</button>
+          </div>
+        </div>
+        <div class="panel-info">
+          Create groups and drag accounts into them
+        </div>
+        <div id="groupsList" class="items-list">
+          <div id="emptyGroupsMessage" class="empty-message">
+            <p>No groups yet!</p>
+            <p class="help-text">Click "Add Group" to create your first group</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="options-footer">
+      <div class="footer-info">
+        <span>Changes are saved automatically</span>
+      </div>
+    </footer>
+  </div>
+  
+  <script src="../shared/storage.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
+

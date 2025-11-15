@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Groups</title>
+  <link rel="stylesheet" href="tab-view.css">
+</head>
+<body>
+  <div class="tab-container">
+    <!-- Left Panel: Account Groups -->
+    <div class="left-panel">
+      <header class="panel-header">
+        <h1>📁 Account Groups</h1>
+        <div class="header-buttons">
+          <button id="toggleTheme" class="icon-button" title="Toggle Night Mode">🌙</button>
+          <button id="openOptions" class="icon-button" title="Manage Groups">⚙️</button>
+        </div>
+      </header>
+      
+      <div class="accounts-content">
+        <!-- Ungrouped accounts section -->
+        <div id="ungroupedSection" class="ungrouped-section">
+          <div class="section-header">
+            <span class="section-title">Ungrouped Accounts</span>
+          </div>
+          <div id="ungroupedAccounts" class="accounts-list"></div>
+        </div>
+        
+        <!-- Grouped accounts section -->
+        <div id="groupsContainer" class="groups-container"></div>
+        
+        <!-- Empty state -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <p>No accounts found.</p>
+          <p class="help-text">Add an email account in Thunderbird to get started.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Panel: Email List -->
+    <div class="right-panel">
+      <header class="email-header">
+        <div class="email-header-info">
+          <h2 id="currentAccountName">Select an account</h2>
+          <span id="currentFolderName" class="folder-name"></span>
+        </div>
+        <div class="email-stats">
+          <span id="emailCount">-</span> messages
+        </div>
+      </header>
+      
+      <div id="emailListContainer" class="email-list-container">
+        <div class="welcome-message">
+          <div class="welcome-icon">📬</div>
+          <h3>Welcome to Account Groups!</h3>
+          <p>Click on any account on the left to view its emails</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="../shared/storage.js"></script>
+  <script src="tab-view.js"></script>
+</body>
+</html>
+
